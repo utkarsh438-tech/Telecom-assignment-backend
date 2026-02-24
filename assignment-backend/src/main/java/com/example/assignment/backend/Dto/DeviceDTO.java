@@ -1,0 +1,58 @@
+package com.example.assignment.backend.Dto;
+
+
+import java.util.UUID;
+
+public class DeviceDTO {
+    private UUID id;
+    private String deviceName;
+    private String partNumber;      // fixed capitalization
+    private String buildingName;
+    private String deviceType;
+    private int numShelfPositions;  // plural for consistency
+
+    // Getters and Setters
+    public UUID getId() {
+        return id;
+    }
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    public String getPartNumber() {
+        return partNumber;
+    }
+    public void setPartNumber(String partNumber) {
+        this.partNumber = partNumber;
+    }
+
+    public String getBuildingName() {
+        return buildingName;
+    }
+    public void setBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public int getNumShelfPositions() {
+        return numShelfPositions;
+    }
+    public void setNumShelfPositions(int numShelfPositions) {
+        this.numShelfPositions = numShelfPositions;
+    }
+    private boolean isDelete=false;
+}
+
