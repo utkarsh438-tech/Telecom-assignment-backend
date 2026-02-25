@@ -20,7 +20,7 @@ public class neo4jConfig {
 
     @Bean
     public Driver getNeo4jDriver() {
-        return GraphDatabase.driver(uri, AuthTokens.basic(username, password));
+        return GraphDatabase.driver( uri, AuthTokens.basic( username,password));
     }
 
 }
