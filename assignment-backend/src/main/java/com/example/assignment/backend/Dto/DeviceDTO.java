@@ -4,7 +4,7 @@ package com.example.assignment.backend.Dto;
 import java.util.UUID;
 
 public class DeviceDTO {
-    private UUID id;
+    private String id;
     private String deviceName;
     private String partNumber;      // fixed capitalization
     private String buildingName;
@@ -12,10 +12,10 @@ public class DeviceDTO {
     private int numShelfPositions;  // plural for consistency
 
     // Getters and Setters
-    public UUID getId() {
+    public String getId() {
         return id;
     }
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -54,5 +54,13 @@ public class DeviceDTO {
         this.numShelfPositions = numShelfPositions;
     }
     private boolean isDelete=false;
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
 }
 

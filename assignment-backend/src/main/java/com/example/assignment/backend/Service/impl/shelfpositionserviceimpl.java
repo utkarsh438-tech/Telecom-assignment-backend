@@ -28,8 +28,9 @@ try(Session session = neo4jDriver.session()){
     result.list().forEach(row->{
         var node=row.get("sp").asNode();
         ShelfPositionDTO dto=new ShelfPositionDTO();
-        dto.setId(UUID.fromString(node.get("id").toString()));
-        dto.setDeviceId(UUID.fromString(node.get("deviceId").toString()));
+
+        dto.setId(UUID.fromString(node.get("id").asString()));
+        dto.setDeviceId(UUID.fromString(node.get("deviceId").asString()));
         dto.setAllocated(node.get("allocated").asBoolean());
         dto.setDeleted(node.get("isDeleted").asBoolean());
         positions.add(dto);
@@ -46,14 +47,14 @@ try(Session session = neo4jDriver.session()){
     public ShelfPositionDTO getShelfPositionById(String Id) {
         try(Session session = neo4jDriver.session()){
             var result=session.run(
-                    "MATCH(sp:ShelfPosition {id:$id,isDeleted:false}) return sp)",
+                    "MATCH(sp:ShelfPosition {id:$id,isDeleted:false}) return sp",
                     org.neo4j.driver.Values.parameters("id",Id)
             );
             if(result.hasNext()){
                 var node=result.next().get("sp").asNode();
                 ShelfPositionDTO dto=new ShelfPositionDTO();
-                dto.setId(UUID.fromString(node.get("id").toString()));
-                dto.setDeviceId(UUID.fromString(node.get("deviceId").toString()));
+                dto.setId(UUID.fromString(node.get("id").asString()));
+                dto.setDeviceId(UUID.fromString(node.get("deviceId").asString()));
                 dto.setAllocated(node.get("allocated").asBoolean());
                 dto.setDeleted(node.get("isDeleted").asBoolean());
                 return dto;
@@ -66,7 +67,7 @@ try(Session session = neo4jDriver.session()){
     public ShelfPositionDTO freeShelfPosition(String Id) {
     try(Session session = neo4jDriver.session()){
         var result=session.run(
-                "MATCH(sp:ShelfPosition {id:$id,isDeleted:false}))"+
+                "MATCH(sp:ShelfPosition {id:$id,isDeleted:false})"+
                         "SET sp.allocated=false return sp",
                 org.neo4j.driver.Values.parameters("id",Id)
         );

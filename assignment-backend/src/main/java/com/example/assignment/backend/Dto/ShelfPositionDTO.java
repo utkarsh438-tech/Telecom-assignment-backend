@@ -39,6 +39,16 @@ public class ShelfPositionDTO {
 
     //    private int positionNumber;
     private UUID deviceId;
+    private int positionNumber;
     private boolean allocated = false;
+
+    public int getPositionNumber() {
+        return positionNumber;
+    }
+
+    public void setPositionNumber(int positionNumber) {
+        this.positionNumber = positionNumber;
+    }
+
     private boolean isDeleted=false;
 }

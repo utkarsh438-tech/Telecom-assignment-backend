@@ -4,11 +4,12 @@ import com.example.assignment.backend.Dto.ShelfDTO;
 import com.example.assignment.backend.Service.ShelfService;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@Service
 public class ShelfServiceImpl implements ShelfService {
     private final Driver neo4jDriver;
 

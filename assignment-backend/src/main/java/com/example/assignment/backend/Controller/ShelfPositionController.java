@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/shelfPosition")
+@RequestMapping("/shelf-Position")
 public class ShelfPositionController {
 
     private ShelfPositionService shelfPositionService;

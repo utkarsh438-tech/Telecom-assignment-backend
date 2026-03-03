@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.sound.midi.MidiDeviceReceiver;
 import java.util.List;
 import java.util.UUID;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/devices")
+@RequestMapping("/devices")
 public class DeviceController {
 
     private final DeviceService deviceService;
@@ -27,7 +27,7 @@ public class DeviceController {
     public ResponseEntity<?> CreateDevice(@RequestBody DeviceDTO devicedto) {
         try {
             String deviceId = deviceService.createDevice(devicedto);
-            devicedto.setId(UUID.fromString(deviceId));
+            devicedto.setId(deviceId);
             return ResponseEntity.status(HttpStatus.CREATED).body(devicedto);
 
         } catch (Exception ex) {
