@@ -1,10 +1,12 @@
 package com.example.assignment.backend.Dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class ShelfDTO {
 
 
     private String id;
-
+@JsonAlias("name")
     private String shelfName;
     private String partNumber;
 

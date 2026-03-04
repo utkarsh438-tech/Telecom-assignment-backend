@@ -23,7 +23,8 @@ public class ShelfServiceImpl implements ShelfService {
             String shelfId = UUID.randomUUID().toString();
             session.run("MATCH (sp:ShelfPosition {id: $shelfpositionId, allocated: false, isDeleted: false}) "
                     + "CREATE (s:Shelf {id: $id, name: $name, partNumber: $partNumber, isDeleted: false}) "
-                    + "CREATE (sp)-[:HAS]->(s) " + "SET sp.allocated = true",
+                    + "CREATE (sp)-[:HAS]->(s) " +
+                            "SET sp.allocated = true",
                     org.neo4j.driver.Values.parameters("shelfpositionId",shelfpositionId,
                             "id", shelfId,
                             "name", shelfDTO.getShelfName(),

@@ -73,7 +73,7 @@ public class DeviceServiceimpl implements DeviceService {
             if (result.hasNext()) {
                 var node = result.next().get("d").asNode();
                 DeviceDTO dto = new DeviceDTO();
-                dto.setId(UUID.fromString(node.get("id").asString()));
+                dto.setId(node.get("id").asString());
                 dto.setDeviceName(node.get("deviceName").asString());
                 dto.setPartNumber(node.get("partNumber").asString());
                 dto.setBuildingName(node.get("buildingName").asString());
@@ -93,7 +93,7 @@ public class DeviceServiceimpl implements DeviceService {
             result.list().forEach(record -> {
                 var node = record.get("d").asNode();
                 DeviceDTO dto = new DeviceDTO();
-                dto.setId(UUID.fromString(node.get("id").asString()));
+                dto.setId(node.get("id").asString());
                 dto.setDeviceName(node.get("deviceName").asString());
                 dto.setPartNumber(node.get("partNumber").asString());
                 dto.setBuildingName(node.get("buildingName").asString());

@@ -20,7 +20,7 @@ public shelfpositionserviceimpl(Driver neo4jDriver) {
     public List<ShelfPositionDTO> getShelfPositionByDeviceId(String deviceId) {
 try(Session session = neo4jDriver.session()){
     var result=session.run(
-            "MATCH(d:Device {id:$id,isDeleted:false})-[:HAS]->(sp:ShelfPosition) +" +
+            "MATCH(d:Device {id:$id,isDeleted:false})-[:HAS]->(sp:ShelfPosition) " +
                     "WHERE sp.isDeleted=false RETURN sp",
             org.neo4j.driver.Values.parameters("id",deviceId)
     );
@@ -33,6 +33,7 @@ try(Session session = neo4jDriver.session()){
         dto.setDeviceId(UUID.fromString(node.get("deviceId").asString()));
         dto.setAllocated(node.get("allocated").asBoolean());
         dto.setDeleted(node.get("isDeleted").asBoolean());
+        dto.setPositionNumber(node.get("positionNumber").asInt());
         positions.add(dto);
 
 
