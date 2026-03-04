@@ -4,6 +4,15 @@ import java.util.UUID;
 
 public class ShelfPositionDTO {
     private UUID id ;
+private String shelfId;
+
+    public String getShelfId() {
+        return shelfId;
+    }
+
+    public void setShelfId(String shelfid) {
+        this.shelfId = shelfId;
+    }
 
     public UUID getId() {
         return id;

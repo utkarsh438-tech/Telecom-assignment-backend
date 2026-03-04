@@ -21,7 +21,9 @@ public shelfpositionserviceimpl(Driver neo4jDriver) {
 try(Session session = neo4jDriver.session()){
     var result=session.run(
             "MATCH(d:Device {id:$id,isDeleted:false})-[:HAS]->(sp:ShelfPosition) " +
-                    "WHERE sp.isDeleted=false RETURN sp",
+                    "WHERE sp.isDeleted=false" +
+                    "OPTIONAL MATCH (sp)-[HAS]->(s:Shelf{isDeleted:false})"+
+                    "RETURN sp,s ORDER BY sp.positionNumber",
             org.neo4j.driver.Values.parameters("id",deviceId)
     );
     List<ShelfPositionDTO> positions=new ArrayList<>();
