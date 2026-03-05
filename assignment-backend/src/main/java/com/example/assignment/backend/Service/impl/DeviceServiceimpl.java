@@ -1,6 +1,8 @@
 package com.example.assignment.backend.Service.impl;
 
 import com.example.assignment.backend.Dto.DeviceDTO;
+import com.example.assignment.backend.Exception.BusinessException;
+import com.example.assignment.backend.Exception.ResourceNotFoundException;
 import com.example.assignment.backend.Service.DeviceService;
 import org.modelmapper.ModelMapper;
 import org.neo4j.driver.Driver;
@@ -60,6 +62,8 @@ public class DeviceServiceimpl implements DeviceService {
 
             return deviceId;
 
+        } catch (Exception e) {
+            throw new BusinessException("Failed to create device", e);
         }
     }
 
@@ -82,6 +86,10 @@ public class DeviceServiceimpl implements DeviceService {
                 return dto;
             }
             return null;
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to fetch device: " + id, e);
         }
     }
 
@@ -102,6 +110,10 @@ public class DeviceServiceimpl implements DeviceService {
                 devices.add(dto);
             });
             return devices;
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to fetch devices" , e);
         }
     }
 
@@ -123,6 +135,10 @@ public class DeviceServiceimpl implements DeviceService {
                 return getDeviceById(id);
             }
             return null;
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to update device: " + id, e);
         }
     }
 
@@ -135,7 +151,11 @@ public class DeviceServiceimpl implements DeviceService {
                     + "s.isDeleted = true RETURN d",
                     org.neo4j.driver.Values.parameters("id",
                             id));
-            return result.hasNext(); }
+            return result.hasNext(); }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to delete device: " + id, e);
+        }
         }
     }
 

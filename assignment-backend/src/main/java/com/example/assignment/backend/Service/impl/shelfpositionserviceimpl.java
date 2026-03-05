@@ -1,6 +1,8 @@
 package com.example.assignment.backend.Service.impl;
 
 import com.example.assignment.backend.Dto.ShelfPositionDTO;
+import com.example.assignment.backend.Exception.BusinessException;
+import com.example.assignment.backend.Exception.ResourceNotFoundException;
 import com.example.assignment.backend.Service.ShelfPositionService;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
@@ -47,10 +49,15 @@ try(Session session = neo4jDriver.session()){
 
 
 
-    });
+    }
+    );
     return positions;
 
-    }
+    }catch (ResourceNotFoundException e) {
+    throw e;
+} catch (Exception e) {
+    throw new BusinessException("Failed to fetch  " + e);
+}
 }
 
     @Override
@@ -70,6 +77,10 @@ try(Session session = neo4jDriver.session()){
                 return dto;
             }
             return null;
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to fetch  " + e);
         }
     }
 
@@ -84,6 +95,10 @@ try(Session session = neo4jDriver.session()){
         if(result.hasNext()){
             return getShelfPositionById(Id);
         }
+    }catch (ResourceNotFoundException e) {
+        throw e;
+    } catch (Exception e) {
+        throw new BusinessException("Failed to delete : " , e);
     }
 
         return null;

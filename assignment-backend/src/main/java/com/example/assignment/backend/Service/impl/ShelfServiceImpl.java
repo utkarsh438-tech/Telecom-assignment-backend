@@ -1,6 +1,8 @@
 package com.example.assignment.backend.Service.impl;
 
 import com.example.assignment.backend.Dto.ShelfDTO;
+import com.example.assignment.backend.Exception.BusinessException;
+import com.example.assignment.backend.Exception.ResourceNotFoundException;
 import com.example.assignment.backend.Service.ShelfService;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
@@ -30,44 +32,77 @@ public class ShelfServiceImpl implements ShelfService {
                             "name", shelfDTO.getShelfName(),
                             "partNumber", shelfDTO.getPartNumber()));
             return shelfId;
+        }catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to create shelf", e);
         }
     }
 
     @Override
     public ShelfDTO getShelfById(String id) {
         try (Session session = neo4jDriver.session()) {
-            var result = session.run("MATCH (s:Shelf {id:$id, isDeleted:false}) RETURN s",
+            var result = session.run(
+                    "MATCH  (d:Device)-[:HAS]->(sp:ShelfPosition)-[:HAS]->(s:Shelf {id:$id,isDeleted:false}) "+
+                            "WHERE sp.isDeleted = false  AND d.isDeleted=false " +
+                                    " RETURN s,sp,d",
                     org.neo4j.driver.Values.parameters("id", id));
             if (result.hasNext()) {
-                var node = result.next().get("s").asNode();
+                var record = result.next();
+                var node = record.get("s").asNode();
+                var dnode=record.get("d").asNode();
+                var spnode=record.get("sp").asNode();
+
+
                 ShelfDTO dto = new ShelfDTO();
                 dto.setId((node.get("id").asString()));
                 dto.setShelfName(node.get("name").asString());
                 dto.setPartNumber(node.get("partNumber").asString());
                 dto.setDeleted(node.get("isDeleted").asBoolean());
                 dto.setDeviceName(node.get("deviceName").asString());
-//                dto.getPosition(node.get("Position").asString());
+
+                dto.setDeviceName(dnode.get("deviceName").asString());
+                dto.setDeviceId(dnode.get("deviceId").asString());
+                dto.setPosition(spnode.get("positionNumber").asInt());
+
                 return dto;
             }
             return null;
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to fetch Shelf: " + id, e);
         }
     }
 
     @Override
     public List<ShelfDTO> getAllShelves() {
         try (Session session = neo4jDriver.session()) {
-            var result = session.run("MATCH (s:Shelf) WHERE s.isDeleted=false RETURN s");
+            var result = session.run("MATCH  (d:Device)-[:HAS]->(sp:ShelfPosition)-[:HAS]->(s:Shelf {isDeleted:false}) "+
+                            "WHERE sp.isDeleted = false  AND d.isDeleted=false " +
+                            " RETURN s,sp,d");
             List<ShelfDTO> shelves = new ArrayList<>();
             result.list().forEach(record -> {
                 var node = record.get("s").asNode();
+                var  dnode = record.get("d").asNode();
+                var spnode = record.get("sp").asNode();
+
                 ShelfDTO dto = new ShelfDTO();
                 dto.setId((node.get("id").asString()));
                 dto.setShelfName(node.get("name").asString());
                 dto.setPartNumber(node.get("partNumber").asString());
                 dto.setDeleted(node.get("isDeleted").asBoolean());
+
+                dto.setDeviceName(dnode.get("deviceName").asString());
+                dto.setPosition(spnode.get("positionNumber").asInt());
+                dto.setDeviceId(dnode.get("deviceId").asString());
                 shelves.add(dto);
             });
             return shelves;
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to fetch shelves" , e);
         }
     }
 
@@ -81,6 +116,10 @@ public class ShelfServiceImpl implements ShelfService {
                 return getShelfById(id);
             }
             return null;
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to update Shelf: " + id, e);
         }
     }
 
@@ -93,6 +132,10 @@ public class ShelfServiceImpl implements ShelfService {
                     + "SET sp.allocated = false " + "DELETE r RETURN s",
                     org.neo4j.driver.Values.parameters("id", id));
             return result.hasNext();
+        }catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("Failed to delete device: " + id, e);
         }
     }
 
