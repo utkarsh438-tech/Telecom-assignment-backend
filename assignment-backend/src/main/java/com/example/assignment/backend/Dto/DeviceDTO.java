@@ -53,14 +53,14 @@ public class DeviceDTO {
     public void setNumShelfPositions(int numShelfPositions) {
         this.numShelfPositions = numShelfPositions;
     }
-    private boolean isDelete=false;
+    private boolean isDeleted=false;
 
-    public boolean isDelete() {
-        return isDelete;
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
-    public void setDelete(boolean delete) {
-        isDelete = delete;
+    public void setDeleted(boolean delete) {
+        this.isDeleted = delete;
     }
 }
 

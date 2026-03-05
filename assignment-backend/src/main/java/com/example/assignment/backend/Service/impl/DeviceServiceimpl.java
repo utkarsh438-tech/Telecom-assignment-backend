@@ -129,7 +129,7 @@ public class DeviceServiceimpl implements DeviceService {
     @Override
     public boolean deleteDevice(String id) {
         try (Session session = neo4jDriver.session()) {
-            var result = session.run("MATCH (d:Device {id: $id})-[:HAS]->(sp:ShelfPosition) "
+            var result = session.run(   "MATCH (d:Device {id:$id})-[:HAS]->(sp:ShelfPosition) "
                     + "OPTIONAL MATCH (sp)-[:HAS]->(s:Shelf) " +
                     "SET d.isDeleted = true, sp.isDeleted = true, sp.allocated = false, "
                     + "s.isDeleted = true RETURN d",

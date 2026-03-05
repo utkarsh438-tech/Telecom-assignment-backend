@@ -20,10 +20,11 @@ public shelfpositionserviceimpl(Driver neo4jDriver) {
     public List<ShelfPositionDTO> getShelfPositionByDeviceId(String deviceId) {
 try(Session session = neo4jDriver.session()){
     var result=session.run(
-            "MATCH(d:Device {id:$id,isDeleted:false})-[:HAS]->(sp:ShelfPosition) " +
-                    "WHERE sp.isDeleted=false" +
-                    "OPTIONAL MATCH (sp)-[HAS]->(s:Shelf{isDeleted:false})"+
-                    "RETURN sp,s ORDER BY sp.positionNumber",
+
+                    "MATCH (d:Device {id: $id, isDeleted: false})-[:HAS]->(sp:ShelfPosition) " +
+                            "WHERE sp.isDeleted = false " +
+                            "OPTIONAL MATCH (sp)-[:HAS]->(s:Shelf {isDeleted: false}) " +
+                            "RETURN sp, s ORDER BY sp.positionNumber",
             org.neo4j.driver.Values.parameters("id",deviceId)
     );
     List<ShelfPositionDTO> positions=new ArrayList<>();
@@ -36,6 +37,12 @@ try(Session session = neo4jDriver.session()){
         dto.setAllocated(node.get("allocated").asBoolean());
         dto.setDeleted(node.get("isDeleted").asBoolean());
         dto.setPositionNumber(node.get("positionNumber").asInt());
+
+        if(!row.get("s").isNull()){
+            var sNode=row.get("s").asNode();
+            dto.setShelfId(sNode.get("id").asString());
+            dto.setShelfName(sNode.get("name").asString());
+        }
         positions.add(dto);
 
 

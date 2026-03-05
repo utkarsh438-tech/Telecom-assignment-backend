@@ -45,6 +45,8 @@ public class ShelfServiceImpl implements ShelfService {
                 dto.setShelfName(node.get("name").asString());
                 dto.setPartNumber(node.get("partNumber").asString());
                 dto.setDeleted(node.get("isDeleted").asBoolean());
+                dto.setDeviceName(node.get("deviceName").asString());
+//                dto.getPosition(node.get("Position").asString());
                 return dto;
             }
             return null;
@@ -72,7 +74,9 @@ public class ShelfServiceImpl implements ShelfService {
     @Override
     public ShelfDTO updateShelf(String id, ShelfDTO shelfDTO) {
         try (Session session = neo4jDriver.session()) {
-            var result = session.run("MATCH (s:Shelf {id:$id, isDeleted:false}) " + "SET s.name = $name, s.partNumber = $partNumber RETURN s", org.neo4j.driver.Values.parameters("id", id, "name", shelfDTO.getShelfName(), "partNumber", shelfDTO.getPartNumber()));
+            var result = session.run("MATCH (s:Shelf {id:$id, isDeleted:false}) "
+                    + "SET s.name = $name, s.partNumber = $partNumber RETURN s",
+                    org.neo4j.driver.Values.parameters("id", id, "name", shelfDTO.getShelfName(), "partNumber", shelfDTO.getPartNumber()));
             if (result.hasNext()) {
                 return getShelfById(id);
             }
@@ -83,7 +87,11 @@ public class ShelfServiceImpl implements ShelfService {
     @Override
     public boolean deleteShelf(String id) {
         try (Session session = neo4jDriver.session()) {
-            var result = session.run("MATCH (s:Shelf {id:$id}) " + "SET s.isDeleted = true " + "WITH s " + "OPTIONAL MATCH (sp:ShelfPosition)-[r:HAS]->(s) " + "SET sp.allocated = false " + "DELETE r RETURN s", org.neo4j.driver.Values.parameters("id", id));
+            var result = session.run("MATCH (s:Shelf {id:$id}) "
+                    + "SET s.isDeleted = true " + "WITH s "
+                    + "OPTIONAL MATCH (sp:ShelfPosition)-[r:HAS]->(s) "
+                    + "SET sp.allocated = false " + "DELETE r RETURN s",
+                    org.neo4j.driver.Values.parameters("id", id));
             return result.hasNext();
         }
     }

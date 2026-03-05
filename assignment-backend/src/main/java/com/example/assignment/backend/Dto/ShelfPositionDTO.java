@@ -10,7 +10,7 @@ private String shelfId;
         return shelfId;
     }
 
-    public void setShelfId(String shelfid) {
+    public void setShelfId(String shelfId) {
         this.shelfId = shelfId;
     }
 
@@ -60,4 +60,13 @@ private String shelfId;
     }
 
     private boolean isDeleted=false;
+private String shelfName;
+
+    public String getShelfName() {
+        return shelfName;
+    }
+
+    public void setShelfName(String shelfName) {
+        this.shelfName = shelfName;
+    }
 }
